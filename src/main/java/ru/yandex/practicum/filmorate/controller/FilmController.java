@@ -35,7 +35,7 @@ public class FilmController {
         }
 
         if (film.getReleaseDate() == null
-                || film.getReleaseDate().isBefore(LocalDate.of(1985, 12, 28))) {
+                || film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
             log.warn("Ошибка: дата релиза невалидна {}", film.getReleaseDate());
             throw new ValidationException("Ошибка: дата релиза невалидна");
         }
@@ -44,10 +44,11 @@ public class FilmController {
             throw new ValidationException("Ошибка: продолжительность невалидна");
         }
 
-        log.info("Фильм успешно создан с id={}", film.getId());
 
         film.setId(getNextId());
         films.put(film.getId(), film);
+
+        log.info("Фильм успешно создан с id={}", film.getId());
 
         return film;
     }
