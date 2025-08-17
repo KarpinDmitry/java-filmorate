@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.DuplicatedDataException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.util.UserValidator;
 
 import java.time.LocalDate;
 import java.util.Collection;
@@ -28,24 +29,11 @@ public class UserController {
     public User create(@Valid @RequestBody User user) {
         log.info("Запрос на создание пользователя: {}", user);
 
-        if (user.getEmail() == null || user.getEmail().isBlank() || !user.getEmail().contains("@")) {
-            log.warn("Ошибка валидации: некорректный email: {}", user.getEmail());
-            throw new ValidationException("Ошибка: значение почты невалидно");
-        }
-
-        if (user.getLogin() == null || user.getLogin().isBlank() || user.getLogin().contains(" ")) {
-            log.warn("Ошибка валидации: некорректный логин: {}", user.getLogin());
-            throw new ValidationException("Ошибка: значение логина невалидно");
-        }
+        UserValidator.userCreate(user);
 
         if (user.getName() == null || user.getName().isBlank()) {
             log.debug("Имя пустое — устанавливаем имя равным логину: {}", user.getLogin());
             user.setName(user.getLogin());
-        }
-
-        if (user.getBirthday() == null || user.getBirthday().isAfter(LocalDate.now())) {
-            log.warn("Ошибка валидации: дата рождения в будущем или null: {}", user.getBirthday());
-            throw new ValidationException("Ошибка: дата рождения не может быть в будущем");
         }
 
         user.setId(getNextId());
@@ -58,10 +46,8 @@ public class UserController {
     public User update(@Valid @RequestBody User newUser) {
         log.info("Запрос на обновление пользователя: {}", newUser);
 
-        if (newUser.getId() == null) {
-            log.warn("Ошибка: не указан ID при обновлении пользователя");
-            throw new ValidationException("Id должен быть указан");
-        }
+        UserValidator.updateValidator(newUser);
+
         if (!users.containsKey(newUser.getId())) {
             log.warn("Ошибка: пользователь с ID={} не найден", newUser.getId());
             throw new ValidationException("Пользователь с таким ID не найден");
