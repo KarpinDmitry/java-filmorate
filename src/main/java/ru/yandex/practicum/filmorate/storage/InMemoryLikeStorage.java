@@ -9,7 +9,7 @@ import java.util.Set;
 
 @Component
 public class InMemoryLikeStorage implements LikeStorage {
-    private Map<Integer, Set<Integer>> filmLikes = new HashMap<>();
+    private final Map<Integer, Set<Integer>> filmLikes = new HashMap<>();
 
     @Override
     public void addLike(Integer filmId, Integer userId) {

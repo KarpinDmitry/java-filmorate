@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 @Component
 public class InMemoryFriendshipStorage implements FriendshipStorage {
-    private Map<Integer, Set<Integer>> friends = new HashMap<>();
+    private final Map<Integer, Set<Integer>> friends = new HashMap<>();
 
     @Override
     public void addFriend(Integer userId, Integer friendId) {

@@ -13,7 +13,7 @@ import java.util.Optional;
 @Slf4j
 public class InMemoryUserStorage implements UserStorage {
 
-    private Map<Integer, User> users = new HashMap<>();
+    private final Map<Integer, User> users = new HashMap<>();
 
     @Override
     public User create(User user) {

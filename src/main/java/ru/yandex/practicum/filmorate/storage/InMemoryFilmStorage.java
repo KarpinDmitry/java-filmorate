@@ -13,7 +13,7 @@ import java.util.Optional;
 @Slf4j
 public class InMemoryFilmStorage implements FilmStorage {
 
-    private Map<Integer, Film> films = new HashMap<>();
+    private final Map<Integer, Film> films = new HashMap<>();
 
     @Override
     public Film create(Film film) {
