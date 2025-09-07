@@ -1,19 +1,19 @@
 package ru.yandex.practicum.filmorate.model;
 
+import jakarta.validation.constraints.Email;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.time.LocalDate;
 
-/**
- * Film.
- */
 @Data
 @EqualsAndHashCode(of = "id")
-public class Film {
+public class User {
     Integer id;
+    @Email(message = "Некорректный формат email")
+    String email;
+    String login;
     String name;
-    String description;
-    LocalDate releaseDate;
-    Integer duration;
+    LocalDate birthday;
+
 }
