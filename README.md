@@ -1,6 +1,6 @@
 ## Схема базы данных
 
-![Схема базы данных](https://dbdiagram.io/d/68d18f9c7c85fb9961da10b0)
+https://dbdiagram.io/d/68d18f9c7c85fb9961da10b0
 
 ### Описание схемы
 
