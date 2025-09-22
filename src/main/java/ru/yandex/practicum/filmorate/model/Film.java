@@ -5,9 +5,6 @@ import lombok.EqualsAndHashCode;
 
 import java.time.LocalDate;
 
-/**
- * Film.
- */
 @Data
 @EqualsAndHashCode(of = "id")
 public class Film {
