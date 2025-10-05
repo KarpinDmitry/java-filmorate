@@ -1,7 +1,7 @@
 package ru.yandex.practicum.filmorate.service;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -11,23 +11,28 @@ import ru.yandex.practicum.filmorate.storage.UserStorage;
 import ru.yandex.practicum.filmorate.util.FilmValidator;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @Slf4j
-@RequiredArgsConstructor
 public class FilmService {
     private final FilmStorage filmStorage;
     private final LikeStorage likeStorage;
     private final UserStorage userStorage;
 
+    public FilmService(@Qualifier("filmDbStorage") FilmStorage filmStorage, @Qualifier("likeDbStorage") LikeStorage likeStorage,
+                       @Qualifier("userDbStorage") UserStorage userStorage) {
+        this.filmStorage = filmStorage;
+        this.likeStorage = likeStorage;
+        this.userStorage = userStorage;
+    }
+
     public Film create(Film film) {
         FilmValidator.createValidator(film);
-        filmStorage.create(film);
-        return film;
+        Film savedFilm = filmStorage.create(film);
+
+        // Перечитываем фильм из БД, чтобы загрузить жанры с name
+        return findById(savedFilm.getId());
     }
 
     public Film update(Film newFilm) {
@@ -77,8 +82,12 @@ public class FilmService {
     }
 
     public Film findById(Integer filmId) {
-        return filmStorage.findById(filmId).orElseThrow(() ->
+        Film film = filmStorage.findById(filmId).orElseThrow(() ->
                 new NotFoundException("Фильм с id=" + filmId + " не найден"));
+
+        film.setGenres(new LinkedHashSet<>(filmStorage.findGenresByFilmId(filmId)));
+
+        return film;
     }
 
     public void addLike(Integer filmId, Integer userId) {
