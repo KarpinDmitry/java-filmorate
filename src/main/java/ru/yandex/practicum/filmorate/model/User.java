@@ -1,14 +1,15 @@
 package ru.yandex.practicum.filmorate.model;
 
 import jakarta.validation.constraints.Email;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.time.LocalDate;
-import java.util.Map;
 
 @Data
 @EqualsAndHashCode(of = "id")
+@AllArgsConstructor
 public class User {
     Integer id;
     @Email(message = "Некорректный формат email")
@@ -16,6 +17,8 @@ public class User {
     String login;
     String name;
     LocalDate birthday;
-    private Map<Long, FriendshipStatus> friends;
+
+    public User() {
+    }
 
 }
