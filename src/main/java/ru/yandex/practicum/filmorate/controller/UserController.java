@@ -49,8 +49,9 @@ public class UserController {
     }
 
     @PutMapping("/{id}/friends/{friendId}")
-    public void addFriend(@PathVariable Integer id, @PathVariable Integer friendId) {
+    public User addFriend(@PathVariable Integer id, @PathVariable Integer friendId) {
         userService.addFriend(id, friendId);
+        return userService.findById(id);//1
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -67,5 +68,19 @@ public class UserController {
     @GetMapping("/{id}/friends/common/{otherId}")
     public List<User> getCommonFriends(@PathVariable Integer id, @PathVariable Integer otherId) {
         return userService.getCommonFriends(id, otherId);
+    }
+
+    //Подтверждение дружбы
+    @PutMapping("/{id}/friends/{friendId}/confirm")
+    public void confirmFriendship(@PathVariable Integer id, @PathVariable Integer friendId) {
+        log.info("Пользователь {} подтвердил дружбу с пользователем {}", id, friendId);
+        userService.confirmFriendship(id, friendId);
+    }
+
+    //Заявки в друзья
+    @GetMapping("/{id}/friend-requests")
+    public List<User> getFriendRequests(@PathVariable Integer id) {
+        log.info("Получен список заявок в друзья для пользователя {}", id);
+        return userService.getFriendRequests(id);
     }
 }

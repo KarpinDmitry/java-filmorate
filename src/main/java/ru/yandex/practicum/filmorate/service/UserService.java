@@ -1,11 +1,12 @@
 package ru.yandex.practicum.filmorate.service;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.DuplicatedDataException;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
+import ru.yandex.practicum.filmorate.model.Friendship;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.FriendshipStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
@@ -16,10 +17,17 @@ import java.util.List;
 
 @Service
 @Slf4j
-@RequiredArgsConstructor
 public class UserService {
+    @Qualifier("userDbStorage")
     private final UserStorage userStorage;
+    @Qualifier("friendshipDbStorage")
     private final FriendshipStorage friendshipStorage;
+
+    public UserService(@Qualifier("userDbStorage") UserStorage userStorage,
+                       @Qualifier("friendshipDbStorage") FriendshipStorage friendshipStorage) {
+        this.userStorage = userStorage;
+        this.friendshipStorage = friendshipStorage;
+    }
 
     public User create(User user) {
         UserValidator.userCreate(user);
@@ -129,5 +137,24 @@ public class UserService {
             throw new NotFoundException("User not found");
         }
         return friendshipStorage.getCommonFriends(userId, friendId).stream().map(this::findById).toList();
+    }
+
+    public void confirmFriendship(Integer userId, Integer friendId) {
+        if (!userStorage.existsById(userId) || !userStorage.existsById(friendId)) {
+            throw new NotFoundException("User not found");
+        }
+        friendshipStorage.confirmFriendship(userId, friendId);
+    }
+
+    public List<User> getFriendRequests(Integer userId) {
+        if (!userStorage.existsById(userId)) {
+            throw new NotFoundException("User not found");
+        }
+
+        List<Friendship> friendRequests = friendshipStorage.getFriendRequests(userId);
+
+        return friendRequests.stream()
+                .map(request -> findById(request.getUserId()))
+                .toList();
     }
 }

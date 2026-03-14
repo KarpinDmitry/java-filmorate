@@ -1,11 +1,11 @@
-package ru.yandex.practicum.filmorate.storage;
+package ru.yandex.practicum.filmorate.storage.inmemory;
 
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.model.Friendship;
+import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.storage.FriendshipStorage;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -16,6 +16,11 @@ public class InMemoryFriendshipStorage implements FriendshipStorage {
     public void addFriend(Integer userId, Integer friendId) {
         friends.computeIfAbsent(userId, s -> new HashSet<>()).add(friendId);
         friends.computeIfAbsent(friendId, s -> new HashSet<>()).add(userId);
+    }
+
+    @Override
+    public void confirmFriendship(Integer userId, Integer friendId) {
+
     }
 
     @Override
@@ -61,7 +66,17 @@ public class InMemoryFriendshipStorage implements FriendshipStorage {
         return commonFriends;
     }
 
+    @Override
+    public List<Friendship> getFriendRequests(Integer userId) {
+        return List.of();
+    }
+
     public boolean existsById(Integer userId) {
         return friends.containsKey(userId);
+    }
+
+    @Override
+    public List<Genre> findGenresByFilmId(Integer filmId) {
+        return List.of();
     }
 }

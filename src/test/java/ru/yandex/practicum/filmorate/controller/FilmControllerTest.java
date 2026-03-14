@@ -6,9 +6,9 @@ import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
-import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
-import ru.yandex.practicum.filmorate.storage.InMemoryLikeStorage;
-import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.inmemory.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.storage.inmemory.InMemoryLikeStorage;
+import ru.yandex.practicum.filmorate.storage.inmemory.InMemoryUserStorage;
 
 import java.time.LocalDate;
 
